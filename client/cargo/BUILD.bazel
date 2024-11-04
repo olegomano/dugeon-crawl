@@ -1,0 +1,40 @@
+"""
+@generated
+cargo-raze generated Bazel file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+package(default_visibility = ["//visibility:public"])
+
+licenses([
+    "notice",  # See individual crates for specific licenses
+])
+
+# Aliased targets
+alias(
+    name = "crossterm",
+    actual = "//client/cargo/vendor/crossterm-0.27.0:crossterm",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "libc",
+    actual = "//client/cargo/vendor/libc-0.2.159:libc",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "log",
+    actual = "//client/cargo/vendor/log-0.3.6:log",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)

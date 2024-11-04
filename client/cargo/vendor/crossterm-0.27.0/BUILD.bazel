@@ -1,0 +1,99 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//client/cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT"
+])
+
+# Generated Targets
+
+# Unsupported target "event-match-modifiers" with type "example" omitted
+
+# Unsupported target "event-poll-read" with type "example" omitted
+
+# Unsupported target "event-read" with type "example" omitted
+
+# Unsupported target "event-read-char-line" with type "example" omitted
+
+# Unsupported target "event-stream-async-std" with type "example" omitted
+
+# Unsupported target "event-stream-tokio" with type "example" omitted
+
+# Unsupported target "is_tty" with type "example" omitted
+
+# Unsupported target "stderr" with type "example" omitted
+
+rust_library(
+    name = "crossterm",
+    srcs = glob(["**/*.rs"]),
+    aliases = {
+    },
+    crate_features = [
+        "bracketed-paste",
+        "default",
+        "events",
+        "windows",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2021",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=crossterm",
+        "manual",
+    ],
+    version = "0.27.0",
+    # buildifier: leave-alone
+    deps = [
+        "//client/cargo/vendor/bitflags-2.6.0:bitflags",
+        "//client/cargo/vendor/parking_lot-0.12.3:parking_lot",
+    ] + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
+            "@rules_rust//rust/platform:aarch64-unknown-linux-gnu",
+        ): [
+            "//client/cargo/vendor/libc-0.2.159:libc",
+            "//client/cargo/vendor/mio-0.8.8:mio",
+            "//client/cargo/vendor/signal-hook-0.3.17:signal_hook",
+            "//client/cargo/vendor/signal-hook-mio-0.2.4:signal_hook_mio",
+        ],
+        "//conditions:default": [],
+    }) + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+            "//client/cargo/vendor/crossterm_winapi-0.9.1:crossterm_winapi",
+            "//client/cargo/vendor/winapi-0.3.9:winapi",
+        ],
+        "//conditions:default": [],
+    }),
+)
