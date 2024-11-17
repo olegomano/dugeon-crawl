@@ -108,6 +108,19 @@ impl TerminalRenderer {
             },
         );
     }
+
+    fn PrintPlayer(out: &mut std::io::Stdout) {
+        Self::PrintChar(
+            out,
+            '+',
+            Color::Rgb {
+                r: 200,
+                g: 200,
+                b: 200,
+            },
+            Color::Rgb { r: 255, g: 0, b: 0 },
+        );
+    }
 }
 
 impl render::IRenderer for TerminalRenderer {
@@ -143,9 +156,11 @@ impl render::IRenderer for TerminalRenderer {
                         .expect(&format!("Failed to get cell {} {}", x, y));
 
                     let terrain_id = cell.EntitiesOfType(entity_type_t::TERRAIN);
+                    let player_id = cell.EntitiesOfType(entity_type_t::PLAYER);
+
                     if terrain_id.len() == 0 {
                         Self::PrintBorder(&mut stdout);
-                    } else {
+                    } else if player_id.len() == 0 {
                         let terrain = app
                             .board
                             .GetEntity::<terrain::Terrain>(terrain_id[0])
@@ -161,6 +176,14 @@ impl render::IRenderer for TerminalRenderer {
                         } else {
                             Self::PrintNonPathable(&mut stdout);
                         }
+                    } else {
+                        /**
+                        let player = app
+                            .board
+                            .GetEntity::<player::Player>(player_id[0])
+                            .expect("");
+                        **/
+                        Self::PrintPlayer(&mut stdout);
                     }
                 }
             }
