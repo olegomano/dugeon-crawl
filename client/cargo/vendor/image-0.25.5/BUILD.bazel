@@ -1,0 +1,98 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//client/cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
+])
+
+# Generated Targets
+
+# Unsupported target "blur" with type "bench" omitted
+
+# Unsupported target "copy_from" with type "bench" omitted
+
+# Unsupported target "decode" with type "bench" omitted
+
+# Unsupported target "encode" with type "bench" omitted
+
+# Unsupported target "fast_blur" with type "bench" omitted
+
+rust_library(
+    name = "image",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "avif",
+        "bmp",
+        "dds",
+        "default",
+        "default-formats",
+        "exr",
+        "ff",
+        "gif",
+        "hdr",
+        "ico",
+        "jpeg",
+        "png",
+        "pnm",
+        "qoi",
+        "rayon",
+        "tga",
+        "tiff",
+        "webp",
+    ],
+    crate_root = "src/lib.rs",
+    data = [] + glob(["**"]),
+    compile_data = glob(["**"]),
+    edition = "2021",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=image",
+        "manual",
+    ],
+    version = "0.25.5",
+    # buildifier: leave-alone
+    deps = [
+        "//client/cargo/vendor/bytemuck-1.20.0:bytemuck",
+        "//client/cargo/vendor/byteorder-lite-0.1.0:byteorder_lite",
+        "//client/cargo/vendor/color_quant-1.1.0:color_quant",
+        "//client/cargo/vendor/exr-1.73.0:exr",
+        "//client/cargo/vendor/gif-0.13.1:gif",
+        "//client/cargo/vendor/image-webp-0.2.0:image_webp",
+        "//client/cargo/vendor/num-traits-0.2.19:num_traits",
+        "//client/cargo/vendor/png-0.17.15:png",
+        "//client/cargo/vendor/qoi-0.4.1:qoi",
+        "//client/cargo/vendor/ravif-0.11.11:ravif",
+        "//client/cargo/vendor/rayon-1.10.0:rayon",
+        "//client/cargo/vendor/rgb-0.8.50:rgb",
+        "//client/cargo/vendor/tiff-0.9.1:tiff",
+        "//client/cargo/vendor/zune-core-0.4.12:zune_core",
+        "//client/cargo/vendor/zune-jpeg-0.4.14:zune_jpeg",
+    ],
+)

@@ -1,0 +1,62 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//client/cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # BSD-3-Clause from expression "BSD-3-Clause"
+])
+
+# Generated Targets
+
+rust_library(
+    name = "ravif",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "threading",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2021",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=ravif",
+        "manual",
+    ],
+    version = "0.11.11",
+    # buildifier: leave-alone
+    deps = [
+        "//client/cargo/vendor/avif-serialize-0.8.2:avif_serialize",
+        "//client/cargo/vendor/imgref-1.11.0:imgref",
+        "//client/cargo/vendor/loop9-0.1.5:loop9",
+        "//client/cargo/vendor/quick-error-2.0.1:quick_error",
+        "//client/cargo/vendor/rav1e-0.7.1:rav1e",
+        "//client/cargo/vendor/rayon-1.10.0:rayon",
+        "//client/cargo/vendor/rgb-0.8.50:rgb",
+    ],
+)

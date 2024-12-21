@@ -61,7 +61,7 @@ name = "mio_1_0"
 path = "tests/mio_1_0.rs"
 
 [dependencies.libc]
-version = "0.2.147"
+version = "~0.2"
 
 [dependencies.mio-0_6]
 version = "~0.6"

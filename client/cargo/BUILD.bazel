@@ -22,6 +22,15 @@ alias(
 )
 
 alias(
+    name = "image",
+    actual = "//client/cargo/vendor/image-0.25.5:image",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "libc",
     actual = "//client/cargo/vendor/libc-0.2.159:libc",
     tags = [
@@ -33,6 +42,24 @@ alias(
 alias(
     name = "log",
     actual = "//client/cargo/vendor/log-0.3.6:log",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "nalgebra",
+    actual = "//client/cargo/vendor/nalgebra-0.33.2:nalgebra",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "syn",
+    actual = "//client/cargo/vendor/syn-2.0.90:syn",
     tags = [
         "cargo-raze",
         "manual",

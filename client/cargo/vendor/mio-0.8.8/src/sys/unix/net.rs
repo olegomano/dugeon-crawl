@@ -1,7 +1,6 @@
 use std::io;
 use std::mem::size_of;
 use std::net::{Ipv4Addr, Ipv6Addr, SocketAddr, SocketAddrV4, SocketAddrV6};
-use std::mem::MaybeUninit;
 
 pub(crate) fn new_ip_socket(addr: SocketAddr, socket_type: libc::c_int) -> io::Result<libc::c_int> {
     let domain = match addr {
@@ -115,8 +114,7 @@ pub(crate) fn socket_addr(addr: &SocketAddr) -> (SocketAddrCRepr, libc::socklen_
             (sockaddr, socklen)
         }
         SocketAddr::V6(ref addr) => {
-            let mut sin6_addr_init : MaybeUninit<libc::in6_addr> = MaybeUninit::uninit();
-            let mut sin6_addr = unsafe{ sin6_addr_init.assume_init() };
+            let mut sin6_addr: libc::in6_addr = unsafe { std::mem::uninitialized() };
             sin6_addr.s6_addr = addr.ip().octets();
 
             let sockaddr_in6 = libc::sockaddr_in6 {

@@ -1,0 +1,107 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//client/cargo", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # Apache-2.0 from expression "Apache-2.0"
+])
+
+# Generated Targets
+
+# Unsupported target "nalgebra_bench" with type "bench" omitted
+
+# Unsupported target "dimensional_genericity" with type "example" omitted
+
+# Unsupported target "homogeneous_coordinates" with type "example" omitted
+
+# Unsupported target "linear_system_resolution" with type "example" omitted
+
+# Unsupported target "matrix_construction" with type "example" omitted
+
+# Unsupported target "matrixcompare" with type "example" omitted
+
+# Unsupported target "mvp" with type "example" omitted
+
+# Unsupported target "point_construction" with type "example" omitted
+
+# Unsupported target "raw_pointer" with type "example" omitted
+
+# Unsupported target "reshaping" with type "example" omitted
+
+# Unsupported target "scalar_genericity" with type "example" omitted
+
+# Unsupported target "screen_to_view_coords" with type "example" omitted
+
+# Unsupported target "transform_conversion" with type "example" omitted
+
+# Unsupported target "transform_matrix4" with type "example" omitted
+
+# Unsupported target "transform_vector_point" with type "example" omitted
+
+# Unsupported target "transform_vector_point3" with type "example" omitted
+
+# Unsupported target "transformation_pointer" with type "example" omitted
+
+# Unsupported target "unit_wrapper" with type "example" omitted
+
+rust_library(
+    name = "nalgebra",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+        "macros",
+        "matrixmultiply",
+        "nalgebra-macros",
+        "std",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2018",
+    proc_macro_deps = [
+        "//client/cargo/vendor/nalgebra-macros-0.2.2:nalgebra_macros",
+    ],
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=nalgebra",
+        "manual",
+    ],
+    version = "0.33.2",
+    # buildifier: leave-alone
+    deps = [
+        "//client/cargo/vendor/approx-0.5.1:approx",
+        "//client/cargo/vendor/matrixmultiply-0.3.9:matrixmultiply",
+        "//client/cargo/vendor/num-complex-0.4.6:num_complex",
+        "//client/cargo/vendor/num-rational-0.4.2:num_rational",
+        "//client/cargo/vendor/num-traits-0.2.19:num_traits",
+        "//client/cargo/vendor/simba-0.9.0:simba",
+        "//client/cargo/vendor/typenum-1.17.0:typenum",
+    ],
+)
+
+# Unsupported target "lib" with type "test" omitted

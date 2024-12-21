@@ -1,28 +1,30 @@
-
-
 load("@rules_rust//rust:defs.bzl", "rust_library")
+load("@rules_rust//rust:defs.bzl", "rust_binary")
 package(default_visibility = ["//visibility:public"])
 
 rust_library(
-    name = "render",
-    srcs = ["render.rs"],
+    name = "blit_renderer",
+    srcs = ["blit_renderer.rs"],
     deps = [
-      "//client/src/board:entity",
-      "//client/src/board:board",
-    ]
+      "//client/cargo:crossterm",
+      "//client/src/render/texture:texture",
+      "//client/src/render/texture:sampler",
+    ],
+    rustc_flags = ["-Z", "unstable-options"],
 )
 
-rust_library(
-    name = "terminal_renderer",
-    srcs = ["terminal_renderer.rs"],
+rust_binary(
+    name = "term_png",
+    srcs = ["executables/term_png.rs"],
     deps = [
-      ":render",
-      "//client/src/board:entity",
-      "//client/src/board:entity_type",
-      "//client/src/board:board",
-      "//client/src/board:cell",
-      "//client/cargo:crossterm",
-      "//client/src/board/entity_types:terrain",
-      "//client/src/board/entity_types:player",
-    ]
+        "//client/cargo:crossterm",
+        "//client/cargo:image",
+        "//client/cargo:nalgebra",
+        "//client/src/render:blit_renderer",
+        "//client/src/render/texture:texture",
+        "//client/src/render/texture:sampler",
+    ],
+    rustc_flags = ["-Z", "unstable-options"],
 )
+
+

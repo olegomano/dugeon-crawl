@@ -14,7 +14,5 @@ rust_binary(
         "//client/src/board/entity_types:player",
         "//client/src/board:entity",
         "//client/src/board:entity_type",
-        "//client/src/render:render",
-        "//client/src/render:terminal_renderer",
     ],
 )

@@ -6,7 +6,15 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_rust/releases/download/0.23.0/rules_rust-v0.23.0.tar.gz"],
 )
 
-load("@rules_rust//rust:repositories.bzl", "rust_repositories")
+load("@rules_rust//rust:repositories.bzl", "rust_repositories","rules_rust_dependencies", "rust_register_toolchains")
 
-rust_repositories(edition = "2021")
-
+rules_rust_dependencies()
+rust_register_toolchains(
+  edition = "2024",
+  versions = [
+    "nightly/2024-11-22"
+  ],
+  extra_exec_rustc_flags = [
+    "-Zunstable-options"
+  ],
+)
