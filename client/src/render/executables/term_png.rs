@@ -5,9 +5,17 @@ extern crate nalgebra;
 extern crate sampler;
 extern crate texture;
 use crate::image::GenericImageView;
+use crossterm::event::{self, Event, KeyCode};
 use crossterm::terminal;
+use crossterm::{
+    execute,
+    terminal::{EnterAlternateScreen, LeaveAlternateScreen},
+};
 use nalgebra::Matrix4;
+use nalgebra::Translation3;
+use nalgebra::Vector3;
 use std::env;
+use std::io::{stdout, Write};
 use std::thread;
 use std::time::Duration;
 use std::time::Instant;
@@ -24,20 +32,37 @@ pub fn main() {
         dst_rect: Matrix4::identity(),
     };
 
-    let rotation_matrix =
-        Matrix4::from_axis_angle(&nalgebra::Vector3::z_axis(), 15.0_f32.to_radians());
+    let rotation = Translation3::new(0.5, 0.5, 0.0).to_homogeneous()
+        * Matrix4::from_axis_angle(&Vector3::z_axis(), 1.0_f32.to_radians())
+        * Translation3::new(-0.5, -0.5, 0.0).to_homogeneous();
+    let mut out = std::io::stdout();
 
     crossterm::terminal::enable_raw_mode();
     let start = Instant::now();
-    let mut stdout = std::io::stdout();
+    execute!(out, EnterAlternateScreen);
 
     loop {
-        img_sampler.dst_rect = rotation_matrix * img_sampler.dst_rect;
+        if event::poll(std::time::Duration::from_millis(10)).expect("") {
+            if let Event::Key(key_event) = event::read().expect("") {
+                if key_event.code == KeyCode::Char('q') {
+                    break;
+                }
+            }
+        }
+
+        img_sampler.dst_rect = rotation * img_sampler.dst_rect;
+        screen_buffer.Fill(texture::Pixel {
+            r: 0,
+            g: 0,
+            b: 0,
+            a: 0,
+        });
         img_sampler.Blit(&img, &mut screen_buffer);
-        blit_renderer::BlitImage(&screen_buffer, 0, 0, &mut stdout);
+        blit_renderer::BlitImage(&screen_buffer, 0, 0, &mut out);
     }
 
     let duration = start.elapsed();
     crossterm::terminal::disable_raw_mode();
+    execute!(out, LeaveAlternateScreen);
     println!("Time elapsed: {:?}", duration);
 }

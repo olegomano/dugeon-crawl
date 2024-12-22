@@ -61,6 +61,14 @@ impl Texture {
         };
     }
 
+    pub fn Fill(&mut self, pixel: Pixel) {
+        for i in 0..(self.buffer.len() / 3) {
+            self.buffer[i * 3] = pixel.r;
+            self.buffer[i * 3 + 1] = pixel.g;
+            self.buffer[i * 3 + 2] = pixel.b;
+        }
+    }
+
     pub fn SetPixelNorm(&mut self, x: f32, y: f32, pixel: Pixel) {
         let x_p = (x * self.width as f32) as u16;
         let y_p = (y * self.height as f32) as u16;
