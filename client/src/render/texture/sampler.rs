@@ -49,10 +49,12 @@ impl Sampler {
     }
 
     pub fn Blit(&self, input: &texture::Texture, output: &mut texture::Texture) {
+        let w_h_ratio = output.height as f32 / output.width as f32;
+
         let screen_transform = matrix![
             1.0, 0.0,0.0,0.0;
-            0.0,-1.0,0.0,1.0;
-            0.0, 0.0,1.0,0.0;
+            0.0,-1.0 * w_h_ratio,0.0,1.0;
+            0.0, 0.0,2.0,0.0;
             0.0, 0.0,0.0,1.0;
         ];
 
@@ -86,8 +88,7 @@ impl Sampler {
         for x_s in (start_x..end_x) {
             for y_s in (start_y..end_y) {
                 let norm_x = (x_s - start_x) as f32 / (end_x - start_x) as f32;
-                let norm_y = (output.width as f32 / output.height as f32) * (y_s - start_y) as f32
-                    / (end_y - start_y) as f32;
+                let norm_y = (y_s - start_y) as f32 / (end_y - start_y) as f32;
 
                 let pixel_space = output_to_screen * Vector4::new(norm_x, norm_y, 0.0, 1.0);
 
