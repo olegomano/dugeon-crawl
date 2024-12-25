@@ -23,8 +23,10 @@ rust_binary(
         "//client/src/render:blit_renderer",
         "//client/src/render/texture:texture",
         "//client/src/render/texture:sampler",
+        "//client/src/profiler:profiler",
     ],
-    rustc_flags = ["-Z", "unstable-options"],
+    rustc_flags = ["-Z", "unstable-options","-Z","macro-backtrace"],
 )
+
 
 

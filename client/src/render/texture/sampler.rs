@@ -91,7 +91,7 @@ impl Sampler {
                 let pixel_space = output_to_screen * Vector4::new(norm_x, norm_y, 0.0, 1.0);
 
                 let pixel_x = pixel_space.x * input_w_pixel;
-                let pixel_y = pixel_space.y * input_h_pixel;
+                let pixel_y = input_h_pixel - pixel_space.y * input_h_pixel;
 
                 if pixel_x > 0.0 && pixel_y > 0.0 {
                     let color = input.Sample(pixel_x as u16, pixel_y as u16);
