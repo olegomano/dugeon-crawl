@@ -1,3 +1,4 @@
+extern crate file_manager;
 extern crate image;
 extern crate nalgebra;
 use crate::image::GenericImageView;
@@ -105,5 +106,15 @@ impl Texture {
             b: self.buffer[offset + 2],
             a: 0xff,
         };
+    }
+}
+
+impl file_manager::IFile<Texture> for Texture {
+    fn Load(p: &str) -> Box<Texture> {
+        return Box::new(Texture::FromImage(p));
+    }
+
+    fn Size(&self) -> usize {
+        return self.buffer.len();
     }
 }

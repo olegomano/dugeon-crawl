@@ -1,5 +1,6 @@
-extern crate blit_renderer;
+extern crate blitter;
 extern crate crossterm;
+extern crate file_manager;
 extern crate image;
 extern crate nalgebra;
 extern crate profiler;
@@ -73,6 +74,10 @@ pub fn main() {
 
     let (screen_w, screen_h) = terminal::size().expect("");
     let mut ascii_buffer = BufferWriter::new(screen_w as usize * screen_h as usize * 1024);
+    let textures = file_manager::FileManager::<texture::Texture>::new(file_manager::Config {
+        max_bytes: 0,
+        max_files: 0,
+    });
 
     let img = texture::Texture::FromImage(img_path);
     let mut screen_buffer = texture::Texture::FromDims(screen_w, screen_h * 2);
@@ -114,7 +119,7 @@ pub fn main() {
         profiler::close_scope!();
 
         profiler::open_scope!("FormAscii");
-        blit_renderer::BlitImage(&screen_buffer, 0, 0, &mut ascii_buffer);
+        blitter::BlitImage(&screen_buffer, 0, 0, &mut ascii_buffer);
         profiler::close_scope!();
 
         profiler::open_scope!("PrintToScreen");

@@ -7,16 +7,8 @@ rust_library(
     deps = [
       "//client/cargo:image",
       "//client/cargo:nalgebra",
+      "//client/src/containers:file_manager"
     ],
     rustc_flags = ["-Z", "unstable-options"],
 )
 
-rust_library(
-    name = "sampler",
-    srcs = ["sampler.rs"],
-    deps = [
-      ":texture", 
-      "//client/cargo:nalgebra",
-    ],
-    rustc_flags = ["-Z", "unstable-options"],
-)

@@ -3,12 +3,24 @@ load("@rules_rust//rust:defs.bzl", "rust_binary")
 package(default_visibility = ["//visibility:public"])
 
 rust_library(
-    name = "blit_renderer",
-    srcs = ["blit_renderer.rs"],
+    name = "sprite",
+    srcs = ["sprite.rs"],
     deps = [
-      "//client/cargo:crossterm",
-      "//client/src/render/texture:texture",
-      "//client/src/render/texture:sampler",
+        "//client/cargo:nalgebra",
+        "//client/src/containers:file_manager",
+    ],
+    rustc_flags = ["-Z", "unstable-options"],
+)
+
+rust_library(
+    name = "context",
+    srcs = ["context.rs"],
+    deps = [
+        "//client/cargo:nalgebra",
+        "//client/src/containers:file_manager",
+        "//client/src/containers:slot_map",
+        "//client/src/render/texture:texture",
+        ":sprite",
     ],
     rustc_flags = ["-Z", "unstable-options"],
 )
@@ -20,10 +32,11 @@ rust_binary(
         "//client/cargo:crossterm",
         "//client/cargo:image",
         "//client/cargo:nalgebra",
-        "//client/src/render:blit_renderer",
+        "//client/src/render/crossterm:blitter",
         "//client/src/render/texture:texture",
-        "//client/src/render/texture:sampler",
+        "//client/src/render/crossterm:sampler",
         "//client/src/profiler:profiler",
+        "//client/src/containers:file_manager",
     ],
     rustc_flags = ["-Z", "unstable-options","-Z","macro-backtrace"],
 )

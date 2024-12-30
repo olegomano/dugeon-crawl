@@ -43,6 +43,10 @@ impl<T> SlotMap<T> {
         };
     }
 
+    fn iter(&self) -> std::slice::Iter<'_, T> {
+        self.buffer.iter()
+    }
+
     pub fn Insert(&mut self, data: T) -> handle_t {
         let handle = handle_t(self.last_handle.0 + 1);
         self.last_handle = handle;
