@@ -93,7 +93,6 @@ pub fn main() {
 
     execute!(out, EnterAlternateScreen);
     crossterm::terminal::enable_raw_mode();
-    execute!(out, crossterm::cursor::Hide);
 
     let start = Instant::now();
     loop {

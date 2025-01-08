@@ -43,7 +43,7 @@ impl<T> SlotMap<T> {
         };
     }
 
-    fn iter(&self) -> std::slice::Iter<'_, T> {
+    pub fn iter(&self) -> std::slice::Iter<'_, T> {
         self.buffer.iter()
     }
 

@@ -14,6 +14,17 @@ rust_library(
 )
 
 rust_library(
+    name = "input_manager",
+    srcs = ["input_manager.rs"],
+    deps = [
+      "//client/cargo:crossterm",
+      "//client/src/common:input",
+      "//client/cargo:nalgebra",
+    ],
+    rustc_flags = ["-Z", "unstable-options"],
+)
+
+rust_library(
     name = "sampler",
     srcs = ["sampler.rs"],
     deps = [
@@ -22,3 +33,19 @@ rust_library(
     ],
     rustc_flags = ["-Z", "unstable-options"],
 )
+
+rust_library(
+    name = "renderer",
+    srcs = ["renderer.rs"],
+    deps = [
+      "//client/cargo:crossterm",
+      "//client/src/render/texture:texture",
+     "//client/src/containers:file_manager",
+      "//client/src/render:sprite",
+      ":sampler",
+      ":blitter",
+    ],
+    rustc_flags = ["-Z", "unstable-options"],
+)
+
+

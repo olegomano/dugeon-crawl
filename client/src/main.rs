@@ -1,40 +1,39 @@
 #[macro_use]
-extern crate log;
-extern crate cell;
 extern crate crossterm;
-extern crate entity;
-extern crate entity_type;
-extern crate player;
-extern crate render;
-extern crate terminal_renderer;
-use crate::crossterm::style::Stylize;
-use crossterm::{
-    cursor,
-    style::{style, Color, PrintStyledContent},
-    terminal, QueueableCommand,
-};
-use std::error::Error;
-use std::io::stdout;
-use std::io::Write;
-use std::time::{Duration, Instant};
+extern crate context;
+extern crate input_manager;
+extern crate renderer;
+
+struct AppState {
+    renderer: renderer::Renderer,
+    input_manager: input_manager::InputManager,
+}
 
 pub fn main() {
-    println!("Hello World");
-    let mut board = board::Board::GenerateRandom();
-
-    let player = board.NewEntity(
-        cell::cell_id_t::new(0, 0),
-        entity_type::entity_type_t::PLAYER,
-        player::Player::new(),
-    );
-
-    let mut app = render::Application {
-        board: board,
-        player: player,
+    let mut state = AppState {
+        renderer: renderer::Renderer::new(),
+        input_manager: input_manager::InputManager::new(),
     };
-    println!("{}", app.board.DebugString());
-    println!("{}", app.board.EntityStore());
+    let mut game_context = context::Context::new(&mut state);
+    game_context.Init(|app_state| {});
 
-    let renderer = terminal_renderer::TerminalRenderer::new();
-    terminal_renderer::TerminalApp::Run(&mut app, &renderer);
+    loop {
+        game_context.TickRender(|app_state, texture_manager, sprite_list| {
+            app_state
+                .renderer
+                .Render(sprite_list.iter(), texture_manager);
+        });
+
+        let keep_running = game_context.TickInput(|app_state| {
+            return vec![app_state.input_manager.PollInput()];
+        });
+
+        if (!keep_running) {
+            break;
+        }
+    }
+
+    game_context.Destroy(|app_state| {
+        app_state.renderer.Destroy();
+    });
 }

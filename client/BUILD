@@ -8,11 +8,9 @@ rust_binary(
     deps = [
         "//client/cargo:crossterm",
         "//client/cargo:log",
-        "//client/src/containers:entity_store",
-        "//client/src/board:board",
-        "//client/src/board:cell",
-        "//client/src/board/entity_types:player",
-        "//client/src/board:entity",
-        "//client/src/board:entity_type",
+        "//client/src/common:context",
+        "//client/src/render/crossterm:renderer",
+        "//client/src/render/crossterm:input_manager",
     ],
+    rustc_flags = ["-Z", "unstable-options"],
 )

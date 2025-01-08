@@ -6,24 +6,12 @@ rust_library(
     name = "sprite",
     srcs = ["sprite.rs"],
     deps = [
-        "//client/cargo:nalgebra",
         "//client/src/containers:file_manager",
+        "//client/cargo:nalgebra",
     ],
     rustc_flags = ["-Z", "unstable-options"],
 )
 
-rust_library(
-    name = "context",
-    srcs = ["context.rs"],
-    deps = [
-        "//client/cargo:nalgebra",
-        "//client/src/containers:file_manager",
-        "//client/src/containers:slot_map",
-        "//client/src/render/texture:texture",
-        ":sprite",
-    ],
-    rustc_flags = ["-Z", "unstable-options"],
-)
 
 rust_binary(
     name = "term_png",
