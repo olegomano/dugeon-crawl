@@ -2,6 +2,7 @@ use std::marker::PhantomData;
 
 extern crate file_manager;
 extern crate input;
+extern crate nalgebra;
 extern crate slot_map;
 extern crate sprite;
 extern crate texture;
@@ -35,7 +36,7 @@ impl<'a, T> Context<'a, T> {
     {
         let player_image = self
             .texture_manager
-            .Handle("~/Documents/Dev/DungeonCrawl/asset/mage.png");
+            .Handle("/home/oleg/Documents/Dev/DungeonCrawl/asset/mage.png");
         let sprite = sprite::Sprite::new(player_image);
 
         self.player = self.sprites.Insert(sprite);
@@ -67,10 +68,16 @@ impl<'a, T> Context<'a, T> {
         let input = f(self.app_state);
         for i in input {
             match i {
+                input::Action::Move(dir) => self.HandleMove(dir),
                 input::Action::Quit() => return false,
                 _ => {}
             }
         }
         return true;
+    }
+
+    fn HandleMove(&mut self, input: nalgebra::Vector4<f32>) {
+        let mut player = self.sprites.GetMut(self.player).expect("");
+        player.Displace(input.x, input.y, input.z);
     }
 }

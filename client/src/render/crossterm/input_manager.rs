@@ -14,6 +14,22 @@ impl InputManager {
     pub fn PollInput(&self) -> input::Action {
         if event::poll(std::time::Duration::from_millis(1)).expect("") {
             if let Event::Key(key_event) = event::read().expect("") {
+                if key_event.code == KeyCode::Char('w') {
+                    return input::Action::Move(nalgebra::Vector4::<f32>::new(
+                        0.0, -0.01, 0.0, 0.0,
+                    ));
+                }
+                if key_event.code == KeyCode::Char('s') {
+                    return input::Action::Move(nalgebra::Vector4::<f32>::new(0.0, 0.01, 0.0, 0.0));
+                }
+                if key_event.code == KeyCode::Char('a') {
+                    return input::Action::Move(nalgebra::Vector4::<f32>::new(0.01, 0.0, 0.0, 0.0));
+                }
+                if key_event.code == KeyCode::Char('d') {
+                    return input::Action::Move(nalgebra::Vector4::<f32>::new(
+                        -0.01, 0.0, 0.0, 0.0,
+                    ));
+                }
                 if key_event.code == KeyCode::Char('q') {
                     return input::Action::Quit();
                 }

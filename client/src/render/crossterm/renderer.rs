@@ -1,5 +1,6 @@
 extern crate crossterm;
 extern crate file_manager;
+extern crate sampler;
 extern crate sprite;
 extern crate texture;
 
@@ -10,6 +11,9 @@ use crossterm::{
     terminal::{BeginSynchronizedUpdate, EndSynchronizedUpdate},
     terminal::{EnterAlternateScreen, LeaveAlternateScreen, SetSize},
 };
+use nalgebra::matrix;
+use nalgebra::Matrix4;
+use nalgebra::Vector4;
 use std::io;
 use std::io::{stdout, Write};
 
@@ -91,8 +95,16 @@ impl Renderer {
             a: 0,
         });
 
-        for sprite in iter {}
-
+        for sprite in iter {
+            let sampler = sampler::Sampler {
+                src_rect: Matrix4::identity(),
+                dst_rect: *sprite.Transform(),
+            };
+            sampler.Blit(
+                texture_manager.Load(sprite.Texture()),
+                &mut self.screen_buffer,
+            );
+        }
         blitter::BlitImage(&self.screen_buffer, 0, 0, &mut self.ascii_buffer);
 
         let mut out = std::io::stdout();

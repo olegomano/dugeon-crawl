@@ -17,6 +17,14 @@ impl Sprite {
         };
     }
 
+    pub fn Transform(&self) -> &Matrix4<f32> {
+        return &self.transform;
+    }
+
+    pub fn Texture(&self) -> handle_t {
+        return self.image;
+    }
+
     pub fn SetScale(&mut self, x: f32, y: f32, z: f32) {
         let x_mag = self.transform.column(0).xyz().norm();
         let y_mag = self.transform.column(1).xyz().norm();

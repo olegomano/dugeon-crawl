@@ -40,7 +40,8 @@ rust_library(
     deps = [
       "//client/cargo:crossterm",
       "//client/src/render/texture:texture",
-     "//client/src/containers:file_manager",
+      "//client/src/containers:file_manager",
+      "//client/cargo:nalgebra",
       "//client/src/render:sprite",
       ":sampler",
       ":blitter",
