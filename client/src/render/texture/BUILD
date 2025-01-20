@@ -5,8 +5,8 @@ rust_library(
     name = "texture",
     srcs = ["texture.rs"],
     deps = [
-      "//client/cargo:image",
-      "//client/cargo:nalgebra",
+      "@crates//:image",
+      "@crates//:nalgebra",
       "//client/src/containers:file_manager"
     ],
     rustc_flags = ["-Z", "unstable-options"],

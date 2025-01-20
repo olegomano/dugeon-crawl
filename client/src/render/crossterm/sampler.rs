@@ -105,9 +105,13 @@ impl Sampler {
                 let pixel_x = pixel_space.x * input.width as f32;
                 let pixel_y = pixel_space.y * input.height as f32;
 
-                if pixel_x > 0.0 && pixel_y > 0.0 {
+                if pixel_space.x > 0.0
+                    && pixel_space.y > 0.0
+                    && pixel_space.x < 1.0
+                    && pixel_space.y < 1.0
+                {
                     let color = input.Sample(pixel_x as u16, pixel_y as u16);
-                    output.SetPixel(x_s as u16, y_s as u16, color);
+                    output.SetPixel(x_s as u16, y_s as u16, color, texture::BlendMode::ALPHA);
                 } else {
                     output.SetPixel(
                         x_s as u16,

@@ -6,7 +6,7 @@ rust_library(
     name = "blitter",
     srcs = ["blitter.rs"],
     deps = [
-      "//client/cargo:crossterm",
+      "@crates//:crossterm",
       "//client/src/render/texture:texture",
       ":sampler",
     ],
@@ -17,9 +17,9 @@ rust_library(
     name = "input_manager",
     srcs = ["input_manager.rs"],
     deps = [
-      "//client/cargo:crossterm",
+      "@crates//:crossterm",
+      "@crates//:nalgebra",
       "//client/src/common:input",
-      "//client/cargo:nalgebra",
     ],
     rustc_flags = ["-Z", "unstable-options"],
 )
@@ -28,8 +28,8 @@ rust_library(
     name = "sampler",
     srcs = ["sampler.rs"],
     deps = [
+      "@crates//:nalgebra",
       "//client/src/render/texture:texture", 
-      "//client/cargo:nalgebra",
     ],
     rustc_flags = ["-Z", "unstable-options"],
 )
@@ -38,10 +38,10 @@ rust_library(
     name = "renderer",
     srcs = ["renderer.rs"],
     deps = [
-      "//client/cargo:crossterm",
+      "@crates//:crossterm",
+      "@crates//:nalgebra",
       "//client/src/render/texture:texture",
       "//client/src/containers:file_manager",
-      "//client/cargo:nalgebra",
       "//client/src/render:sprite",
       ":sampler",
       ":blitter",

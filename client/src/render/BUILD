@@ -6,8 +6,8 @@ rust_library(
     name = "sprite",
     srcs = ["sprite.rs"],
     deps = [
+        "@crates//:nalgebra",
         "//client/src/containers:file_manager",
-        "//client/cargo:nalgebra",
     ],
     rustc_flags = ["-Z", "unstable-options"],
 )
@@ -17,9 +17,10 @@ rust_binary(
     name = "term_png",
     srcs = ["executables/term_png.rs"],
     deps = [
-        "//client/cargo:crossterm",
-        "//client/cargo:image",
-        "//client/cargo:nalgebra",
+        "@crates//:crossterm",
+        "@crates//:image",
+        "@crates//:nalgebra",
+
         "//client/src/render/crossterm:blitter",
         "//client/src/render/texture:texture",
         "//client/src/render/crossterm:sampler",

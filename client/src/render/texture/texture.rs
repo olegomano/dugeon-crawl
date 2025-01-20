@@ -7,6 +7,11 @@ pub enum Format {
     RGB,
 }
 
+pub enum BlendMode {
+    NONE,
+    ALPHA,
+}
+
 pub struct Pixel {
     pub a: u8,
     pub r: u8,
@@ -70,17 +75,30 @@ impl Texture {
         }
     }
 
-    pub fn SetPixelNorm(&mut self, x: f32, y: f32, pixel: Pixel) {
+    pub fn SetPixelNorm(&mut self, x: f32, y: f32, pixel: Pixel, mode: BlendMode) {
         let x_p = (x * self.width as f32) as u16;
         let y_p = (y * self.height as f32) as u16;
-        return self.SetPixel(x_p, y_p, pixel);
+        return self.SetPixel(x_p, y_p, pixel, mode);
     }
 
-    pub fn SetPixel(&mut self, x: u16, y: u16, pixel: Pixel) {
+    pub fn SetPixel(&mut self, x: u16, y: u16, pixel: Pixel, mode: BlendMode) {
         let offset = self.ToIndex(x, y);
-        self.buffer[offset] = pixel.r;
-        self.buffer[offset + 1] = pixel.g;
-        self.buffer[offset + 2] = pixel.b;
+        match mode {
+            BlendMode::NONE => {
+                self.buffer[offset] = pixel.r;
+                self.buffer[offset + 1] = pixel.g;
+                self.buffer[offset + 2] = pixel.b;
+            }
+            BlendMode::ALPHA => {
+                let curr_pixel = self.Sample(x, y);
+                let r = curr_pixel.r * (0xff - pixel.a) + pixel.x * pixel.a;
+                let g = curr_pixel.g * (0xff - pixel.a) + pixel.g * pixel.a;
+                let b = curr_pixel.b * (0xff - pixel.a) + pixel.b * pixel.a;
+                self.buffer[offset] = r;
+                self.buffer[offset + 1] = g;
+                self.buffer[offset + 2] = b;
+            }
+        }
     }
 
     pub fn SampleNorm(&self, x: f32, y: f32) -> Pixel {

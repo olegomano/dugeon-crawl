@@ -7,7 +7,7 @@ rust_library(
     name = "input",
     srcs = ["input.rs"],
     deps = [
-        "//client/cargo:nalgebra",
+        "@crates//:nalgebra",
     ],
     rustc_flags = ["-Z", "unstable-options"],
 )
@@ -17,7 +17,7 @@ rust_library(
     name = "context",
     srcs = ["context.rs"],
     deps = [
-        "//client/cargo:nalgebra",
+        "@crates//:nalgebra",
         "//client/src/containers:file_manager",
         "//client/src/containers:slot_map",
         "//client/src/render/texture:texture",

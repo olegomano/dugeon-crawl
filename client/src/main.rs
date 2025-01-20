@@ -1,5 +1,4 @@
 #[macro_use]
-extern crate crossterm;
 extern crate context;
 extern crate input_manager;
 extern crate renderer;

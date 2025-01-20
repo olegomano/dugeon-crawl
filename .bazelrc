@@ -1,1 +1,9 @@
 build --@rules_rust//rust/toolchain/channel=nightly 
+common --enable_workspace
+common -c opt
+common --action_env=CARGO_PKG_AUTHORS=bazel_rust_env
+common --action_env=CARGO_PKG_DESCRIPTION=bazel_rust_env
+common --action_env=CARGO_PKG_HOMEPAGE=bazel_rust_env
+common --action_env=CARGO_PKG_LICENSE=bazel_rust_env
+common --action_env=CARGO_PKG_REPOSITORY=bazel_rust_env
+common --action_env=RUSTDOC=bazel_rust_env

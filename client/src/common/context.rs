@@ -40,7 +40,7 @@ impl<'a, T> Context<'a, T> {
         let sprite = sprite::Sprite::new(player_image);
         self.player = self.sprites.Insert(sprite);
         let mut player = self.sprites.GetMut(self.player).expect("");
-        player.SetScale(0.5, 0.5, 1.0);
+        player.SetScale(0.1, 0.1, 1.0);
         f(self.app_state);
     }
 

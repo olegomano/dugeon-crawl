@@ -4,3 +4,18 @@
 #
 # For more details, please check https://github.com/bazelbuild/bazel/issues/18958
 ###############################################################################
+module(
+    name = "dungeon_crawl",
+    repo_name = "dungeon_crawl",
+)
+bazel_dep(name = "rules_rust", version = "0.56.0")
+
+crate = use_extension("@rules_rust//crate_universe:extensions.bzl", "crate")
+
+##RUST DEPENDENCIES
+crate.spec(package = "crossterm", version = "0.28.1")
+crate.spec(package = "nalgebra", version = "0.33.2")
+crate.spec(package = "image", version = "0.25.5")
+#####
+crate.from_specs()
+use_repo(crate, "crates")
