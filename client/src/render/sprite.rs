@@ -43,6 +43,20 @@ impl Sprite {
         self.transform[(2, 2)] *= (z / z_mag);
     }
 
+    pub fn ScaleBy(&mut self, scale: f32) {
+        self.transform[(0, 0)] *= scale;
+        self.transform[(1, 0)] *= scale;
+        self.transform[(2, 0)] *= scale;
+
+        self.transform[(0, 1)] *= scale;
+        self.transform[(1, 1)] *= scale;
+        self.transform[(2, 1)] *= scale;
+
+        self.transform[(0, 2)] *= scale;
+        self.transform[(1, 2)] *= scale;
+        self.transform[(2, 2)] *= scale;
+    }
+
     pub fn MoveTo(&mut self, x: f32, y: f32, z: f32) {
         self.transform[(0, 3)] = x;
         self.transform[(1, 3)] = y;

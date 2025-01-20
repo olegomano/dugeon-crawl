@@ -41,7 +41,21 @@ impl<'a, T> Context<'a, T> {
         self.player = self.sprites.Insert(sprite);
         let mut player = self.sprites.GetMut(self.player).expect("");
         player.SetScale(0.1, 0.1, 1.0);
+
+        self.CreateSprite(0.5, -0.25);
+
         f(self.app_state);
+    }
+
+    fn CreateSprite(&mut self, x: f32, y: f32) {
+        let image = self
+            .texture_manager
+            .Handle("/home/oleg/Downloads/LordsOfPain/enemy/skeleton/skeleton_default_walk/E/skeleton_default_walk_E_0.0_7.png");
+        let sprite = sprite::Sprite::new(image);
+        let handle = self.sprites.Insert(sprite);
+        let mut game_object = self.sprites.GetMut(handle).expect("");
+        game_object.SetScale(0.25, 0.25, 1.0);
+        game_object.MoveTo(x, y, 1.0);
     }
 
     pub fn Destroy<F>(&mut self, f: F)
@@ -71,6 +85,7 @@ impl<'a, T> Context<'a, T> {
             match i {
                 input::Action::Move(dir) => self.HandleMove(dir),
                 input::Action::Rotate(angle) => self.HandleRotate(angle),
+                input::Action::Zoom(zoom) => self.HandleZoom(zoom),
                 input::Action::Quit() => return false,
                 _ => {}
             }
@@ -86,5 +101,10 @@ impl<'a, T> Context<'a, T> {
     fn HandleRotate(&mut self, angle: f32) {
         let mut player = self.sprites.GetMut(self.player).expect("");
         player.RotateOriginBy(angle);
+    }
+
+    fn HandleZoom(&mut self, zoom: f32) {
+        let mut player = self.sprites.GetMut(self.player).expect("");
+        player.ScaleBy(zoom);
     }
 }

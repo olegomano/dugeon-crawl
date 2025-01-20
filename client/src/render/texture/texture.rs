@@ -91,7 +91,7 @@ impl Texture {
             }
             BlendMode::ALPHA => {
                 let curr_pixel = self.Sample(x, y);
-                let r = curr_pixel.r * (0xff - pixel.a) + pixel.x * pixel.a;
+                let r = curr_pixel.r * (0xff - pixel.a) + pixel.r * pixel.a;
                 let g = curr_pixel.g * (0xff - pixel.a) + pixel.g * pixel.a;
                 let b = curr_pixel.b * (0xff - pixel.a) + pixel.b * pixel.a;
                 self.buffer[offset] = r;

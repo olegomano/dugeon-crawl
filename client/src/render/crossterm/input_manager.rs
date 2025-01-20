@@ -36,6 +36,12 @@ impl InputManager {
                 if key_event.code == KeyCode::Char('e') {
                     return input::Action::Rotate(15.0);
                 }
+                if key_event.code == KeyCode::Char('z') {
+                    return input::Action::Zoom(0.95);
+                }
+                if key_event.code == KeyCode::Char('x') {
+                    return input::Action::Zoom(1.05);
+                }
                 if key_event.code == KeyCode::Char('`') {
                     return input::Action::Quit();
                 }
