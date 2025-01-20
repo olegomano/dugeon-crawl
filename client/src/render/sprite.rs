@@ -63,11 +63,22 @@ impl Sprite {
         );
     }
 
+    pub fn Scale(&self) -> (f32, f32, f32) {
+        return (
+            self.transform.column(0).xyz().norm(),
+            self.transform.column(1).xyz().norm(),
+            self.transform.column(2).xyz().norm(),
+        );
+    }
+
     pub fn RotateOriginBy(&mut self, angle: f32) {
         let (x, y, z) = self.Position();
-        self.MoveTo(0.0, 0.0, 0.0);
+        let (xs, ys, zs) = self.Scale();
+        //self.SetScale(1.0, 1.0, 1.0);
+        self.MoveTo(0.5, 0.5, 0.0);
         self.transform =
             Matrix4::from_axis_angle(&Vector3::z_axis(), angle.to_radians()) * self.transform;
         self.MoveTo(x, y, z);
+        self.SetScale(xs, ys, zs);
     }
 }

@@ -38,8 +38,9 @@ impl<'a, T> Context<'a, T> {
             .texture_manager
             .Handle("/home/oleg/Documents/Dev/DungeonCrawl/asset/mage.png");
         let sprite = sprite::Sprite::new(player_image);
-
         self.player = self.sprites.Insert(sprite);
+        let mut player = self.sprites.GetMut(self.player).expect("");
+        player.SetScale(0.5, 0.5, 1.0);
         f(self.app_state);
     }
 
@@ -69,6 +70,7 @@ impl<'a, T> Context<'a, T> {
         for i in input {
             match i {
                 input::Action::Move(dir) => self.HandleMove(dir),
+                input::Action::Rotate(angle) => self.HandleRotate(angle),
                 input::Action::Quit() => return false,
                 _ => {}
             }
@@ -79,5 +81,10 @@ impl<'a, T> Context<'a, T> {
     fn HandleMove(&mut self, input: nalgebra::Vector4<f32>) {
         let mut player = self.sprites.GetMut(self.player).expect("");
         player.Displace(input.x, input.y, input.z);
+    }
+
+    fn HandleRotate(&mut self, angle: f32) {
+        let mut player = self.sprites.GetMut(self.player).expect("");
+        player.RotateOriginBy(angle);
     }
 }

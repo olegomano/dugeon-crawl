@@ -53,55 +53,65 @@ impl Sampler {
 
         let screen_transform = matrix![
             1.0, 0.0,0.0,0.0;
-            0.0,-1.0 * w_h_ratio,0.0,1.0;
+            0.0,-1.0 * w_h_ratio,0.0,0.0;
             0.0, 0.0,2.0,0.0;
             0.0, 0.0,0.0,1.0;
         ];
-
-        let screen_to_output =
-            screen_transform.try_inverse().expect("") * self.dst_rect.try_inverse().expect("");
+        let screen_to_output = screen_transform.try_inverse().expect("") * self.dst_rect;
         let output_to_screen = screen_to_output.try_inverse().expect("");
 
-        let output_w_pixel = (self.dst_rect.column(0).xyz().norm() * output.width as f32);
-        let output_h_pixel = (self.dst_rect.column(1).xyz().norm() * output.height as f32);
-        let input_w_pixel = (self.src_rect.column(0).xyz().norm() * input.width as f32);
-        let input_h_pixel = (self.src_rect.column(1).xyz().norm() * input.height as f32);
-
-        let mut bottom_left = screen_to_output * Vector4::new(0.0, 0.0, 0.0, 1.0);
-        let mut bottom_right = screen_to_output * Vector4::new(0.0, 1.0, 0.0, 1.0);
-        let mut top_right = screen_to_output * Vector4::new(1.0, 1.0, 0.0, 1.0);
-        let mut top_left = screen_to_output * Vector4::new(1.0, 0.0, 0.0, 1.0);
-        Self::ClampVec(&mut bottom_left, 0.0, 1.0);
-        Self::ClampVec(&mut top_right, 0.0, 1.0);
-        Self::ClampVec(&mut bottom_right, 0.0, 1.0);
-        Self::ClampVec(&mut top_left, 0.0, 1.0);
+        let bottom_left = screen_to_output * Vector4::new(-0.5, -0.5, 0.0, 1.0);
+        let bottom_right = screen_to_output * Vector4::new(0.5, -0.5, 0.0, 1.0);
+        let top_right = screen_to_output * Vector4::new(0.5, 0.5, 0.0, 1.0);
+        let top_left = screen_to_output * Vector4::new(-0.5, 0.5, 0.0, 1.0);
 
         let start_x = (Self::Min(bottom_left.x, bottom_right.x, top_right.x, top_left.x)
-            * output_w_pixel) as u16;
+            * output.width as f32) as i16;
         let end_x = (Self::Max(bottom_left.x, bottom_right.x, top_right.x, top_left.x)
-            * output_w_pixel) as u16;
+            * output.width as f32) as i16;
         let start_y = (Self::Min(bottom_left.y, bottom_right.y, top_right.y, top_left.y)
-            * output_h_pixel) as u16;
+            * output.height as f32) as i16;
         let end_y = (Self::Max(bottom_left.y, bottom_right.y, top_right.y, top_left.y)
-            * output_h_pixel) as u16;
+            * output.height as f32) as i16;
 
-        for x_s in (start_x..end_x) {
-            for y_s in (start_y..end_y) {
-                let norm_x = (x_s - start_x) as f32 / (end_x - start_x) as f32;
-                let norm_y = (y_s - start_y) as f32 / (end_y - start_y) as f32;
+        let mut screen_start_x = start_x;
+        let mut screen_start_y = start_y;
+        let mut screen_end_x = end_x;
+        let mut screen_end_y = end_y;
 
-                let pixel_space = output_to_screen * Vector4::new(norm_x, norm_y, 0.0, 1.0);
+        Self::Clamp::<i16>(&mut screen_start_x, 0, output.width as i16);
+        Self::Clamp::<i16>(&mut screen_end_x, 0, output.width as i16);
+        Self::Clamp::<i16>(&mut screen_start_y, 0, output.height as i16);
+        Self::Clamp::<i16>(&mut screen_end_y, 0, output.height as i16);
 
-                let pixel_x = pixel_space.x * input_w_pixel;
-                let pixel_y = input_h_pixel - pixel_space.y * input_h_pixel;
+        for x_s in (screen_start_x..screen_end_x) {
+            for y_s in (screen_start_y..screen_end_y) {
+                //normalized screen coordinate
+                //let norm_x = (x_s - start_x) as f32 / (end_x - start_x) as f32;
+                //let norm_y = (y_s - start_y) as f32 / (end_y - start_y) as f32;
+
+                let norm_x = x_s as f32 / output.width as f32;
+                let norm_y = y_s as f32 / output.height as f32;
+
+                if norm_x < 0.0 || norm_x > 1.0 || norm_y < 0.0 || norm_y > 1.0 {
+                    continue;
+                }
+
+                //texture coordinate
+                let mut pixel_space = output_to_screen * Vector4::new(norm_x, norm_y, 0.0, 1.0);
+                pixel_space.x = pixel_space.x + 0.5;
+                pixel_space.y = pixel_space.y + 0.5;
+
+                let pixel_x = pixel_space.x * input.width as f32;
+                let pixel_y = pixel_space.y * input.height as f32;
 
                 if pixel_x > 0.0 && pixel_y > 0.0 {
                     let color = input.Sample(pixel_x as u16, pixel_y as u16);
-                    output.SetPixel(x_s, y_s, color);
+                    output.SetPixel(x_s as u16, y_s as u16, color);
                 } else {
                     output.SetPixel(
-                        x_s,
-                        y_s,
+                        x_s as u16,
+                        y_s as u16,
                         texture::Pixel {
                             r: 255,
                             g: 0,
@@ -123,12 +133,12 @@ impl Sampler {
     }
 
     fn ClampVec(vector: &mut Vector4<f32>, min: f32, max: f32) {
-        Self::Clamp(&mut vector.x, min, max);
-        Self::Clamp(&mut vector.y, min, max);
-        Self::Clamp(&mut vector.z, min, max);
+        Self::Clamp::<f32>(&mut vector.x, min, max);
+        Self::Clamp::<f32>(&mut vector.y, min, max);
+        Self::Clamp::<f32>(&mut vector.z, min, max);
     }
 
-    fn Clamp(out: &mut f32, min: f32, max: f32) {
+    fn Clamp<T: std::cmp::PartialOrd>(out: &mut T, min: T, max: T) {
         if *out > max {
             *out = max;
         } else if *out < min {
