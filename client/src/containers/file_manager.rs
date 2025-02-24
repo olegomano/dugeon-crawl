@@ -9,6 +9,10 @@ impl handle_t {
         return handle_t(v);
     }
 
+    pub fn new_null() -> Self {
+        return handle_t(0);
+    }
+
     pub fn IsNull(&self) -> bool {
         return self.0 == 0;
     }

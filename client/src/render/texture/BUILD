@@ -12,3 +12,11 @@ rust_library(
     rustc_flags = ["-Z", "unstable-options"],
 )
 
+rust_library(
+    name = "sprite_sheet",
+    srcs = ["sprite_sheet.rs"],
+    deps = [
+      "@crates//:nalgebra",
+    ],
+    rustc_flags = ["-Z", "unstable-options"],
+)

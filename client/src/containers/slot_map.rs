@@ -68,6 +68,8 @@ impl<T> SlotMap<T> {
         }
         return None;
     }
+
+    pub fn Erase(&mut self, h: handle_t) {}
 }
 
 impl<T> ISlotMap for SlotMap<T> {

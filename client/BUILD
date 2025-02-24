@@ -7,8 +7,8 @@ rust_binary(
     srcs = ["src/main.rs"],
     deps = [
         "//client/src/common:context",
-        "//client/src/render/crossterm:renderer",
-        "//client/src/render/crossterm:input_manager",
+        "//client/src/scene:test_scene",
+        "//client/src/render/crossterm:crossterm_platform_impl",
     ],
     rustc_flags = ["-Z", "unstable-options"],
     env = {

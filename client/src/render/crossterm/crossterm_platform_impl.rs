@@ -1,5 +1,7 @@
 extern crate crossterm;
 extern crate file_manager;
+extern crate game_object;
+extern crate input;
 extern crate sampler;
 extern crate sprite;
 extern crate texture;
@@ -65,6 +67,22 @@ pub struct Renderer {
     ascii_buffer: BufferWriter,
 }
 
+impl game_object::IPlatform for Renderer {
+    fn OnInit(&mut self) {}
+
+    fn OnRender(&mut self, context: &mut game_object::GameContext) {
+        self.Render(context.sprite_manager.iter(), &mut context.texture_manager);
+    }
+
+    fn GetInput(&mut self) -> Vec<input::Action> {
+        return vec![self.PollInput()];
+    }
+
+    fn OnDestroy(&mut self) {
+        self.Destroy();
+    }
+}
+
 impl Renderer {
     pub fn new() -> Self {
         let (screen_w, screen_h) = terminal::size().expect("");
@@ -89,19 +107,19 @@ impl Renderer {
         I: Iterator<Item = &'b sprite::Sprite>,
     {
         self.screen_buffer.Fill(texture::Pixel {
-            r: 0,
-            g: 0,
-            b: 0,
-            a: 0,
+            r: 255,
+            g: 255,
+            b: 255,
+            a: 255,
         });
 
         for sprite in iter {
             let sampler = sampler::Sampler {
                 src_rect: Matrix4::identity(),
-                dst_rect: *sprite.Transform(),
+                dst_rect: sprite.trans.GetMat().clone(),
             };
             sampler.Blit(
-                texture_manager.Load(sprite.Texture()),
+                texture_manager.Load(sprite.texture.texture),
                 &mut self.screen_buffer,
             );
         }
@@ -112,6 +130,45 @@ impl Renderer {
         handle.write_all(self.ascii_buffer.get_buffer());
         handle.flush();
         self.ascii_buffer.clear();
+    }
+
+    pub fn PollInput(&self) -> input::Action {
+        if event::poll(std::time::Duration::from_millis(1)).expect("") {
+            if let Event::Key(key_event) = event::read().expect("") {
+                if key_event.code == KeyCode::Char('w') {
+                    return input::Action::Move(nalgebra::Vector4::<f32>::new(0.0, 0.01, 0.0, 0.0));
+                }
+                if key_event.code == KeyCode::Char('s') {
+                    return input::Action::Move(nalgebra::Vector4::<f32>::new(
+                        0.0, -0.01, 0.0, 0.0,
+                    ));
+                }
+                if key_event.code == KeyCode::Char('a') {
+                    return input::Action::Move(nalgebra::Vector4::<f32>::new(
+                        -0.01, 0.0, 0.0, 0.0,
+                    ));
+                }
+                if key_event.code == KeyCode::Char('d') {
+                    return input::Action::Move(nalgebra::Vector4::<f32>::new(0.01, 0.0, 0.0, 0.0));
+                }
+                if key_event.code == KeyCode::Char('q') {
+                    return input::Action::Rotate(-15.0);
+                }
+                if key_event.code == KeyCode::Char('e') {
+                    return input::Action::Rotate(15.0);
+                }
+                if key_event.code == KeyCode::Char('z') {
+                    return input::Action::Zoom(0.95);
+                }
+                if key_event.code == KeyCode::Char('x') {
+                    return input::Action::Zoom(1.05);
+                }
+                if key_event.code == KeyCode::Char('`') {
+                    return input::Action::Quit();
+                }
+            }
+        }
+        return input::Action::None();
     }
 
     pub fn Destroy(&mut self) {

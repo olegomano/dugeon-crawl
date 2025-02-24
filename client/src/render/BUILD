@@ -8,6 +8,7 @@ rust_library(
     deps = [
         "@crates//:nalgebra",
         "//client/src/containers:file_manager",
+        "//client/src/common:transform",
     ],
     rustc_flags = ["-Z", "unstable-options"],
 )
