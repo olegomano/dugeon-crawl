@@ -1,15 +1,5 @@
 use nalgebra::Vector2;
-
-/*
- * The left top right bottom in normalized coordinates
- */
-#[derive(Debug, Clone, Copy)]
-pub struct SpriteCell {
-    left: f32,
-    top: f32,
-    right: f32,
-    bottom: f32,
-}
+extern crate transform;
 
 /*
  * The spritesheet is a collection of cells
@@ -24,7 +14,7 @@ pub struct SpriteSheet {
      * dir_index[0][3] is the third frame of dir 0
      *
      */
-    dir_index: Vec<Vec<SpriteCell>>,
+    dir_index: Vec<Vec<transform::Rect>>,
     start_dir: Vector2<f32>,
     per_index_angle: f32,
 }
@@ -41,7 +31,7 @@ impl SpriteSheet {
 
         for x in 0..w_count {
             for y in 0..h_count {
-                let cell = SpriteCell {
+                let cell = transform::Rect {
                     left: x as f32 * cell_width,
                     right: x as f32 * (cell_width + 1.0),
                     bottom: y as f32 * cell_height,
@@ -65,7 +55,7 @@ impl SpriteSheet {
      *
      * progress must be from 0-1
      */
-    pub fn GetCell(&self, dir: &Vector2<f32>, progress: f32) -> &SpriteCell {
+    pub fn GetCell(&self, dir: &Vector2<f32>, progress: f32) -> &transform::Rect {
         /*
          * Take the dot product of the dir and the start dir to find the angle
          * We know we take equal steps so we know the angle per index

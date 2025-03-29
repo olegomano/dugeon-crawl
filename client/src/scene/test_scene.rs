@@ -22,8 +22,8 @@ impl TestScene {
 impl game_object::IScene for TestScene {
     fn OnInit(&mut self, context: &mut game_object::GameContext) {
         self.player = char_controller::CharController::new_sprite(&char_controller::SheetConfig {
-            cell_count_w: 16,
-            cell_count_h: 16,
+            cell_count_w: 2,
+            cell_count_h: 2,
             image_handle: context
                 .texture_manager
                 .Handle("/home/oleg/Documents/Dev/DungeonCrawl/asset/mage.png"),

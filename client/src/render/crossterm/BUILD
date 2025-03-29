@@ -19,6 +19,7 @@ rust_library(
     deps = [
       "@crates//:nalgebra",
       "//client/src/render/texture:texture", 
+      "//client/src/common:transform",
     ],
     rustc_flags = ["-Z", "unstable-options"],
 )

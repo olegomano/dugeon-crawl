@@ -23,12 +23,7 @@ impl Sprite {
         return Self {
             texture: TextureSample {
                 texture: image,
-                src_rect: transform::Rect {
-                    left: 0.0,
-                    bottom: 0.0,
-                    top: 1.0,
-                    right: 1.0,
-                },
+                src_rect: transform::Rect::FromBounds(0.0, 0.0, 1.0, 1.0),
             },
             trans: transform::Transform::new(),
         };

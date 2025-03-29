@@ -1,5 +1,6 @@
 extern crate nalgebra;
 extern crate texture;
+extern crate transform;
 use nalgebra::matrix;
 use nalgebra::Matrix4;
 use nalgebra::Vector4;
@@ -13,8 +14,8 @@ use nalgebra::Vector4;
  * IE a identity matrix represents blitting to the whole screen
  */
 pub struct Sampler {
-    pub src_rect: Matrix4<f32>,
-    pub dst_rect: Matrix4<f32>,
+    pub src_rect: Rect,
+    pub dst_rect: Rect,
 }
 
 /*
@@ -48,6 +49,9 @@ impl Sampler {
         };
     }
 
+    /*
+     * We will blit from src_rect in the input texture into dst_rect in the output texture
+     */
     pub fn Blit(&self, input: &texture::Texture, output: &mut texture::Texture) {
         let w_h_ratio = output.height as f32 / output.width as f32;
 
@@ -57,6 +61,8 @@ impl Sampler {
             0.0, 0.0,2.0,0.0;
             0.0, 0.0,0.0,1.0;
         ];
+        //transforms from input_texture normalized coordinates into output_texture normalized
+        //coordinates
         let screen_to_output = screen_transform.try_inverse().expect("") * self.dst_rect;
         let output_to_screen = screen_to_output.try_inverse().expect("");
 
@@ -98,7 +104,9 @@ impl Sampler {
                 }
 
                 //texture coordinate
-                let mut pixel_space = output_to_screen * Vector4::new(norm_x, norm_y, 0.0, 1.0);
+                let mut pixel_space =
+                    output_to_screen * self.src_rect * Vector4::new(norm_x, norm_y, 0.0, 1.0);
+
                 pixel_space.x = pixel_space.x + 0.5;
                 pixel_space.y = pixel_space.y + 0.5;
 
@@ -148,6 +156,52 @@ impl Sampler {
             *out = max;
         } else if *out < min {
             *out = min;
+        }
+    }
+}
+
+pub struct TextureBlitter {
+    pub src_rect: &transform::Rect,
+    pub src_texture: &texture::Texture,
+    pub dst_rect: &transform::Rect,
+    pub dst_texture: &mut transform::Rect,
+}
+
+impl TextureBlitter {
+    pub fn Blit(&self) {
+        let screen_space_norm = self.dst_rect.BoundingRect();
+
+        let pixel_x_start =
+            (screen_space_norm.BottomLeft().x * self.dst_texture.width as f32) as u16;
+        let pixel_y_start =
+            (screen_space_norm.BottomLeft().y * self.dst_texture.height as f32) as u16;
+        let pixel_width = (screen_space_norm.Dims().0 * self.dst_texture.width as f32) as u16;
+        let pixel_height = (screen_space_norm.Dims().1 * self.dst_texture.height as f32) as u16;
+
+        for p_x in (pixel_x_start..(pixel_x_start + pixel_width)) {
+            for p_y in (pixel_y_start..(pixel_y_start + pixel_height)) {
+                //x,y in normalized pixel coordinates of dst texture space
+                let n_x = p_x as f32 / pixel_width as f32;
+                let n_y = p_y as f32 / pixel_height as f32;
+
+                //project into the dst_rect to know the uv coordinates
+                let uv = self
+                    .dst_rect
+                    .GlobalToLocal(Vector4::new(n_x, n_y, 0.0, 1.0));
+
+                //check if we are out of bounds of the texture rect
+                if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+                    continue;
+                }
+
+                let texture_sample = self.src_rect.LocalToGlobal(uv);
+                let pixel_value = self
+                    .src_texture
+                    .SampleNorm(texture_sample.x, texture_sample.y);
+
+                self.dst_texture
+                    .SetPixelNorm(uv.x, uv.y, pixel, texture::BlendMode::ALPHA);
+            }
         }
     }
 }

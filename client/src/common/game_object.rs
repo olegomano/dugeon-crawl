@@ -21,13 +21,6 @@ pub trait IPlatform {
     fn GetInput(&mut self) -> Vec<input::Action>;
 }
 
-pub trait IMoveable {
-    fn MoveTo(&self, x: f32, y: f32, z: f32);
-    fn DisplaceBy(&self, dx: f32, dy: f32, dz: f32);
-    fn LookAt(&self, x: f32, y: f32, z: f32);
-    fn RotateBy(&self, da: f32);
-}
-
 pub trait IScene {
     fn OnInit(&mut self, context: &mut GameContext);
     fn OnTick(&mut self, context: &mut GameContext);

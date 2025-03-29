@@ -115,7 +115,7 @@ impl Renderer {
 
         for sprite in iter {
             let sampler = sampler::Sampler {
-                src_rect: Matrix4::identity(),
+                src_rect: *sprite.texture.src_rect.ToTransform().GetMat(),
                 dst_rect: sprite.trans.GetMat().clone(),
             };
             sampler.Blit(

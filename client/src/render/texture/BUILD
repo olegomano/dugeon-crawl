@@ -17,6 +17,7 @@ rust_library(
     srcs = ["sprite_sheet.rs"],
     deps = [
       "@crates//:nalgebra",
+      "//client/src/common:transform"
     ],
     rustc_flags = ["-Z", "unstable-options"],
 )
