@@ -31,12 +31,7 @@ impl SpriteSheet {
 
         for x in 0..w_count {
             for y in 0..h_count {
-                let cell = transform::Rect {
-                    left: x as f32 * cell_width,
-                    right: x as f32 * (cell_width + 1.0),
-                    bottom: y as f32 * cell_height,
-                    top: y as f32 * (cell_width + 1.0),
-                };
+                let cell = transform::Rect::FromBounds(0.0, 0.0, 1.0, 1.0);
                 dir_index[y as usize].push(cell);
             }
         }

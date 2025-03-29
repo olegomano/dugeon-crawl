@@ -5,6 +5,7 @@ extern crate input;
 extern crate sampler;
 extern crate sprite;
 extern crate texture;
+extern crate transform;
 
 use crossterm::event::{self, Event, KeyCode};
 use crossterm::terminal;
@@ -114,14 +115,13 @@ impl Renderer {
         });
 
         for sprite in iter {
-            let sampler = sampler::Sampler {
-                src_rect: *sprite.texture.src_rect.ToTransform().GetMat(),
-                dst_rect: sprite.trans.GetMat().clone(),
+            let mut sampler = sampler::TextureBlitter {
+                src_rect: &sprite.texture.src_rect,
+                dst_rect: &transform::Rect::FromTransform(&sprite.trans),
+                src_texture: &texture_manager.Load(sprite.texture.texture),
+                dst_texture: &mut self.screen_buffer,
             };
-            sampler.Blit(
-                texture_manager.Load(sprite.texture.texture),
-                &mut self.screen_buffer,
-            );
+            sampler.Blit();
         }
         blitter::BlitImage(&self.screen_buffer, 0, 0, &mut self.ascii_buffer);
 

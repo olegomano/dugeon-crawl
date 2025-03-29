@@ -35,6 +35,7 @@ rust_library(
       "//client/src/common:input",
       "//client/src/containers:file_manager",
       "//client/src/render:sprite",
+      "//client/src/common:transform",
       ":sampler",
       ":blitter",
     ],
